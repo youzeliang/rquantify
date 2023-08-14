@@ -13,7 +13,7 @@ class Init:
         self.config = config
         self.port = int(self.config['FutuOpenD.Config'].get('Port'))
         self.host = str(self.config['FutuOpenD.Config'].get('Host'))
-        # self.code_list = self.config['Order.Stock'].get('CodeList').split(',')
+        # self.ignore_code = self.config['Order.Stock'].get('IgnoreCodeList').split(',')
 
         self.sub_type = [SubType.K_1M, SubType.K_5M, SubType.K_DAY]
 
