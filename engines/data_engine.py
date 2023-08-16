@@ -3,7 +3,7 @@ import os
 import platform
 import sys
 
-from engines.trading_engine import FutuTrade
+from trading_engine import FutuTrade
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(BASE_DIR)

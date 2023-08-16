@@ -2,6 +2,8 @@ from futu import *
 from datetime import date
 from utils import logger
 
+from typing import List, Any, Dict
+
 
 class FutuTrade:
 
@@ -108,3 +110,30 @@ class FutuTrade:
                 return
 
         return history_df
+
+    def request_trading_days(self, start_date=str(date.today().year - 2) + '-' + str(date.today().month) + '-' + str(
+        date.today().day), end_date=str(date.today())) -> List[Any]:
+        """
+        请求交易日，该交易日是通过自然日剔除周末和节假日得到，未剔除临时休市数据。
+        :param start_date: 默认从今天往过去2年取交易日
+        :param end_date:
+        :return: [{'time': '2020-04-01', 'trade_date_type': 'WHOLE'}, ...]
+        """
+
+        ret, data = self.quote_ctx.request_trading_days(market=TradeDateMarket.HK, start=start_date,
+                                                        end=end_date)
+        if ret == RET_OK:
+            l = list()
+            for i in range(0, len(data)):
+                l.append(data[i]['time'])
+            return l
+        else:
+            print('error:', data)
+
+    def kline_subscribe(self, stock_list: list, sub_type: list) -> bool:
+        self.logger.info(f'Subscribing to {len(stock_list)} kline...')
+        ret_sub, err_message = self.quote_ctx.subscribe(stock_list, sub_type)
+        if ret_sub != RET_OK:
+            self.logger.error(f'Cannot subscribe to K-Line: {err_message}')
+            return False
+        return ret_sub == RET_OK
