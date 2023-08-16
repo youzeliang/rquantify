@@ -59,6 +59,8 @@ class StdScr:
         }
 
         trade_res = self.trading.request_trading_days()
+        if len(trade_res) <= 3:
+            return
         yesterday = trade_res[-2]
         while True:
             time_str = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
