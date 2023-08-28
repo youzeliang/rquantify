@@ -16,4 +16,4 @@ download_directory.mkdir(parents=True, exist_ok=True)
 
 if __name__ == '__main__':
     data = Data()
-    data.down_single_min_data('HK.00700', 6, download_directory)
+    data.down_single_min_data('HK.00800', 6, download_directory)
