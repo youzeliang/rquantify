@@ -1,5 +1,20 @@
 import time
 import datetime
+from datetime import datetime
+
+
+def warrant_vol():
+    x = minutes_passed()
+    if x < 100:
+        return int(x ** 2 * 2400)
+    else:
+        return int(100 ** 2 * 300 + x * 20000)
+
+
+def minutes_passed():
+    current_time = datetime.now()
+    target_time = current_time.replace(hour=9, minute=30, second=0, microsecond=0)
+    return int((current_time - target_time).total_seconds() / 60)
 
 
 def str_of_num(num):
