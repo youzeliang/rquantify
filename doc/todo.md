@@ -6,8 +6,6 @@
 
 一、牛熊筛选
 
-    warrant_pool1      选出恒指的牛熊，发行商为法巴、摩通、法兴
-
     warrant_pool2(bear_pool1, bull_pool1) 筛选换股比率为10000、街货比小于50%的恒指牛熊、最新价格小于0.180, 记录下它们的收回价
 
     update_warrant_pool(bear_pool2, bear_rec_price, bull_pool2, bull_rec_price) 实时更新牛熊池, 恒指当月期货价格距离熊收回价小于-0.75%，距离牛收回价大于0.75%

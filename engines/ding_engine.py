@@ -20,7 +20,8 @@ class Message:
             see the detail https://open.dingtalk.com/document/robots/robot-overview
         """
 
-        self.default_logger = logger.Logger().logger
+        self.logger = logger.get_logger(log_dir=logger.LOG_FILE)
+
         self.secret = secret
         self.webhook = webhook
 
