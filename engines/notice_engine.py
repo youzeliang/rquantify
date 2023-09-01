@@ -63,3 +63,19 @@ class Notice:
                 i['consensus']) + '  实际值: ' + str(i['actual']) + '  ' + str(i['star']) + '星'
 
             return s
+
+    def event(self):
+        current_date = datetime.datetime.now()
+        formatted_date = current_date.strftime('%m/%d')
+        url = f'https://cdn-rili.jin10.com/web_data/{current_date.year}/daily/{formatted_date}/event.json'
+        response = requests.get(url)
+        if response.status_code == 200:
+            data = response.json()
+            for i in data:
+                if i['country'] not in ['中国', '美国'] or i['star'] <= 2:
+                    continue
+
+                print(i['event_content'])
+
+        else:
+            print(f"Request failed with status code: {response.status_code}")
