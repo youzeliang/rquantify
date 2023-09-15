@@ -27,6 +27,14 @@ class OrderEngine:
         self.trade_ctx = trade_ctx
         self.trd_env = TrdEnv.REAL
 
+    def get_holding_position(self, stock_code: str = ''):
+        ret, data = self.trade_ctx.position_list_query(code=stock_code, pl_ratio_min=None, pl_ratio_max=None,
+                                                       trd_env=self.trd_env)
+        if ret != RET_OK:
+            self.default_logger.error(f'Get position list failed: {data}')
+            return None
+        return data
+
     def get_order_list(self):
         """
         查询多日订单,默认当日
