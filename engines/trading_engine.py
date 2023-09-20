@@ -2,6 +2,8 @@ from futu import *
 from datetime import date
 from utils import logger
 
+from utils.global_vars import *
+
 from typing import List, Any, Dict
 
 
@@ -10,7 +12,11 @@ class FutuTrade:
     def __init__(self, quote_ctx: OpenQuoteContext, trade_ctx: OpenSecTradeContext):
         self.quote_ctx = quote_ctx
         self.trade_ctx = trade_ctx
+        self.config = config
+        self.password = self.config['FutuOpenD.Config'].get('Password')
         self.logger = logger.get_logger(log_dir=logger.LOG_FILE)
+        self.trd_env = TrdEnv.REAL if self.config.get('FutuOpenD.Config', 'TrdEnv') == 'REAL' else TrdEnv.SIMULATE
+        self.__unlock_trade()
 
     def get_hk_stocks(self) -> dict:
         output_dict = {}
@@ -128,7 +134,7 @@ class FutuTrade:
                 l.append(data[i]['time'])
             return l
         else:
-            print('error:', data)
+            self.logger.error(data)
 
     def kline_subscribe(self, stock_list: list, sub_type: list) -> bool:
         self.logger.info(f'Subscribing to {len(stock_list)} kline...')
@@ -137,3 +143,16 @@ class FutuTrade:
             self.logger.error(f'Cannot subscribe to K-Line: {err_message}')
             return False
         return ret_sub == RET_OK
+
+    def __unlock_trade(self):
+        """
+        Unlock Trading Account if TrdEnv.REAL
+        """
+
+        if self.trd_env == TrdEnv.REAL:
+            ret, data = self.trade_ctx.unlock_trade(self.password)
+            if ret == RET_OK:
+                self.logger.info("Account Unlock Success.")
+            else:
+                self.logger.error("Account Unlock error.")
+                raise Exception("Account Unlock Unsuccessful: {}".format(data))

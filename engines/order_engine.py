@@ -27,13 +27,50 @@ class OrderEngine:
         self.trade_ctx = trade_ctx
         self.trd_env = TrdEnv.REAL
 
+    def place_order(self, price: float, qty: int, code: str, trd_side=None, order_type=None, trd_env=TrdEnv.SIMULATE,
+                    info=None):
+        # 模拟单不支持 STOP
+        ret, data = self.trade_ctx.place_order(price=price, qty=qty, code=code, trd_side=trd_side,
+                                               order_type=order_type,
+                                               trd_env=trd_env, remark='api-order')
+        if ret == RET_OK:
+            self.default_logger.info(data)
+        else:
+            self.default_logger.error(f'place_order err: \n{data}')
+
+    def place_sell_order(self):
+        pass
+
+
     def get_holding_position(self, stock_code: str = ''):
+        """
+        查询所有持仓
+        :param stock_code:
+        :return:
+        """
         ret, data = self.trade_ctx.position_list_query(code=stock_code, pl_ratio_min=None, pl_ratio_max=None,
                                                        trd_env=self.trd_env)
         if ret != RET_OK:
             self.default_logger.error(f'Get position list failed: {data}')
             return None
         return data
+
+    def get_holding_position_qty(self, stock_code):
+        """
+        查询持仓数量
+        :param stock_code:
+        :return:
+        """
+        global holding_position
+        ret, data = self.trade_ctx.position_list_query(code=stock_code, trd_env=self.trd_env, refresh_cache=True)
+        if ret != RET_OK:
+            self.default_logger.error(f'Get position list failed: {data}')
+            return None
+        else:
+            if data.shape[0] > 0:
+                holding_position = int(data['qty'][0])
+            self.default_logger.info(f'[Position] The position of {stock_code} is {holding_position}')
+        return holding_position
 
     def get_order_list(self):
         """
@@ -50,7 +87,8 @@ class OrderEngine:
             return None
         return order_list_data
 
-    def place_order(self, code: str, side: str, exchange: str, type: str, price: str, qty: int):
+    # ---------------- 以下是尊嘉API
+    def insert_order(self, code: str, side: str, exchange: str, type: str, price: str, qty: int):
         """
         :param code:
         :param qty:
