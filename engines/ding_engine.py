@@ -55,7 +55,7 @@ class Message:
         webhook += "&timestamp=" + timestamp + "&sign=" + sign_res
         info = requests.post(url=webhook, data=json.dumps(message), headers=header)
         if json.loads(info.text).get('errcode') != 0:
-            self.default_logger.error('send DingTalk Group message err.%s', json.loads(info.text))
+            self.logger.error('send DingTalk Group message err.%s', json.loads(info.text))
 
 
 if __name__ == '__main__':
