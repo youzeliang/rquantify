@@ -1,7 +1,7 @@
 import csv
 import os
-import platform
 import sys
+import requests
 
 from trading_engine import FutuTrade
 
@@ -17,7 +17,6 @@ download_directory = current_directory / "../downloads"
 download_directory.mkdir(parents=True, exist_ok=True)
 
 from utils.global_vars import *
-
 from utils import logger
 
 import datetime
@@ -38,7 +37,7 @@ class Data:
                                              host=self.host,
                                              security_firm=SecurityFirm.FUTUSECURITIES)
         self.logger = logger.get_logger(log_dir=logger.LOG_FILE)
-        self.trading = FutuTrade(self.quote_ctx,self.trade_ctx)
+        self.trading = FutuTrade(self.quote_ctx, self.trade_ctx)
 
     def down_single_min_data(self, stock_code, index, data_path):
         csv_name = stock_code.split(".")[-1] + '_' + index_k[index]
@@ -84,6 +83,41 @@ class Data:
                         [res['open'][x], res['close'][x], res['high'][x], res['low'][x], res['volume'][x],
                          res['turnover'][x], res['change_rate'][x], res['last_close'][x], res['time_key'][x]]]
                     writer.writerows(data_list_temp)
+
+    def get_us_quoty_code_list(self, page):
+        url = 'https://www.futunn.com/quote-api/quote-v2/get-stock-list'
+
+        params = {
+            'marketType': 2,
+            'plateType': 1,
+            'rankType': 5,
+            'page': page,
+            'pageSize': 50
+        }
+
+        headers = {
+            'accept': 'application/json, text/plain, */*',
+            'accept-language': 'zh-CN,zh;q=0.9',
+            'cache-control': 'no-cache',
+            'cookie': futu_api[str(page)]['cookie'],
+            'dnt': '1',
+            'futu-x-csrf-token': 'wPN0j4mwm6Uu4Pp-kJYwkngV',
+            'pragma': 'no-cache',
+            'priority': 'u=1, i',
+            'quote-token': futu_api[str(page)]['quote-token'],
+            'referer': 'https://www.futunn.com/quote/us/stock-list/all-us-stocks/top-turnover',
+            'sec-ch-ua': '"Chromium";v="124", "Google Chrome";v="124", "Not-A.Brand";v="99"',
+            'sec-ch-ua-mobile': '?0',
+            'sec-ch-ua-platform': '"macOS"',
+            'sec-fetch-dest': 'empty',
+            'sec-fetch-mode': 'cors',
+            'sec-fetch-site': 'same-origin',
+            'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36'
+        }
+
+        response = requests.get(url, headers=headers, params=params)
+
+        return json.loads(response.text)
 
 
 if __name__ == '__main__':

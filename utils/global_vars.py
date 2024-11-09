@@ -18,3 +18,13 @@ index_type = {0: KLType.K_1M, 1: KLType.K_3M, 2: KLType.K_5M, 3: KLType.K_15M, 4
               6: KLType.K_DAY, 7: KLType.K_WEEK,
               8: KLType.K_MON,
               9: KLType.K_YEAR}
+
+futu_api = {
+    '1': {
+        'cookie': 'xxxxxxx',
+        'quote-token': 'xxxxxxx'},
+    '0': {
+        'cookie': 'xxxx',
+        'quote-token': 'xxx'},
+
+}
