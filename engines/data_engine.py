@@ -3,11 +3,11 @@ import os
 import sys
 import requests
 
-from trading_engine import FutuTrade
-
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(BASE_DIR)
 from pathlib import Path
+
+from trading_engine import FutuTrade
 
 # Get the current directory where the script is located
 current_directory = Path(__file__).parent
@@ -38,6 +38,10 @@ class Data:
                                              security_firm=SecurityFirm.FUTUSECURITIES)
         self.logger = logger.get_logger(log_dir=logger.LOG_FILE)
         self.trading = FutuTrade(self.quote_ctx, self.trade_ctx)
+
+
+    def __del__(self):
+        pass
 
     def down_single_min_data(self, stock_code, index, data_path):
         csv_name = stock_code.split(".")[-1] + '_' + index_k[index]
@@ -122,4 +126,4 @@ class Data:
 
 if __name__ == '__main__':
     data = Data()
-    data.down_single_min_data('HK.00700', 6, download_directory)
+    data.down_single_min_data('HK.800000', 0, download_directory)
