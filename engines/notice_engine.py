@@ -8,6 +8,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(BASE_DIR)
 
 from utils import logger
+from utils.global_vars import *
 
 from engines.init_engine import Init
 
@@ -43,9 +44,6 @@ class Notice:
         for i in data:
             if i['country'] in ['中国', '美国'] or int(i['star']) >= 3:
                 continue
-            ignore = [
-                '天然气', '芝加哥'
-            ]
 
             flag = False
             for x in ignore:
