@@ -46,3 +46,18 @@ def get_logger(logger_name="default_logger", log_dir=None):
     # with this pattern, it's rarely necessary to propagate the error up to parent
     logger.propagate = False
     return logger
+
+
+# class Logger:
+#     _instance = None
+#     _logger = None
+#
+#     def __new__(cls, *args, **kwargs):
+#         if not cls._instance:
+#             cls._instance = super(Logger, cls).__new__(cls, *args, **kwargs)
+#             cls._instance._logger = get_logger()
+#         return cls._instance
+#
+#     @property
+#     def logger(self):
+#         return self._logger
